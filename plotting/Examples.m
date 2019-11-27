@@ -15,7 +15,8 @@ closeall
 projFolderPath = "/Users/chuckjia/Documents/Workspace/Git/weather/";
 resultFolderPath = projFolderPath + "results/";
 
-plotVelocities(resultFolderPath)
+
+plotVelocities(resultFolderPath, 'xrange', [0.25, 0.5], 'zrange', [0, 0.1], 'normalize', 0)
 
 
 %% Plot exact solution

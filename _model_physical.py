@@ -25,8 +25,8 @@ from velocities import PhysicalUW
 
 
 num_space_steps = 100
-Nt = 1000
-Dt = 0.5
+Nt = 100
+Dt = 1.0
 
 x0 = 0.0
 xf = 9e4
@@ -34,13 +34,13 @@ zf = 1.6e4
 
 
 def z0_fcn(x):
-    # height = 2500.0
-    # steepness = 6000.0
-    # x_center = 0.5 * (xf + x0)
-    #
-    # return height * exp(- ((x - x_center) / steepness) ** 2)
+    height = 2500.0
+    steepness = 6000.0
+    x_center = 0.5 * (xf + x0)
 
-    return 0
+    return height * exp(- ((x - x_center) / steepness) ** 2)
+
+    # return 0
 
 
 def z0_der_fcn(x):
@@ -68,5 +68,5 @@ param = Parameters(
     num_msg=100,
     num_csv=100,
     l2_error_period=-1,
-    ave_period_list=[20, -1, -1, -1],
+    ave_period_list=[20, 20, -1, -1],
 )

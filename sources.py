@@ -2,6 +2,7 @@ import numpy as np
 from numpy import (
     exp,
     log,
+    maximum as max,
     pi,
 )
 import physics as phys
@@ -98,7 +99,7 @@ class PhysicalSources(Sources):
         return q_vsw, q_vsi
 
     c_p = phys.c_p
-    Delta_t = phys.Delta_t
+    Delta_t = 10000.0
 
     c1_con = Delta_t * L_v * L_v / (c_p * R_v)
     c2_con = Delta_t * L_s * L_s / (c_p * R_v)
@@ -110,10 +111,10 @@ class PhysicalSources(Sources):
         q_vsw, q_vsi = q_vs_pair
 
         T_squared = T ** 2
-        con_w = (r_qv - rho_o * q_vsw) / (
+        con_w = max(r_qv - rho_o * q_vsw, 0) / (
             self.Delta_t + self.c1_con / T_squared * q_vsw
         )
-        con_i = (r_qv - rho_o * q_vsi) / (
+        con_i = max(r_qv - rho_o * q_vsi, 0) / (
             self.Delta_t + self.c2_con / T_squared * q_vsi
         )
 

@@ -87,6 +87,7 @@ class PhysicalUW(UW):
 
         super().__init__(mesh=mesh)
         self.set_uw_matrices(uw_fcn=self.uw_fcn)
+        self.save_uw_to_csv()
 
         print(
             "Initialized velocities. "
@@ -127,8 +128,8 @@ class PhysicalUW(UW):
         neg_dpsi_dx = (-A / rho_oo * c_x) * sin(c_z * z_hat) * cos(c_x * (x - x_c))
         w_m = neg_dpsi_dx * (x > (x_c - X)) * (x < (x_c + X)) / rho_o
 
-        # u_m = np.ones(x.shape)
-        # w_m = np.zeros(x.shape)
+        u_m = np.ones(x.shape)
+        w_m = np.zeros(x.shape)
 
         return u_m, w_m
 

@@ -6,17 +6,17 @@ closeall
 projFolderPath = "/Users/chuckjia/Documents/Workspace/Git/weather/";
 
 solnameArray = ["theta", "qv", "qc", "qp"];
-zlimitsArray = {[200, 380], [0, 12], [0, 0.035], [0, 1e-3]};
+zlimitsArray = {[200, 380], [0, 12], [0, 0.035], [0, 0.1]};
 zlimitsMap = containers.Map(solnameArray, zlimitsArray);
 
-solname = "qv";
+solname = "theta";
 zlimits = zlimitsMap(solname);
-Dt = 0.5;
+Dt = 1;
 Nt = 100;
-timesteps = 0:Dt:Nt * Dt;
+timesteps = Nt * Dt;
 
 plotSolutions(projFolderPath, 'solutions', solname, 'timesteps', timesteps, ...
     'showGhost', false, ...
-    'zlimits', zlimits, ...
-    'view2d', true, ...
+    'zlimits', 0, ...
+    'view2d', false, ...
     'movie', false);
