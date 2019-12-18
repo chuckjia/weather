@@ -26,11 +26,7 @@ from velocities import PhysicalUW
 
 num_space_steps = 100
 Nt = 1000
-<<<<<<< Updated upstream
 Dt = 0.5
-=======
-Dt = 0.1
->>>>>>> Stashed changes
 
 x0 = 0.0
 xf = 9e4
@@ -38,7 +34,6 @@ zf = 1.6e4
 
 
 def z0_fcn(x):
-<<<<<<< Updated upstream
     # height = 2500.0
     # steepness = 6000.0
     # x_center = 0.5 * (xf + x0)
@@ -46,13 +41,6 @@ def z0_fcn(x):
     # return height * exp(- ((x - x_center) / steepness) ** 2)
 
     return 0
-=======
-    height = 2000.0
-    steepness = 6000.0
-    x_center = 0.5 * (xf + x0)
-
-    return height * exp(- ((x - x_center) / steepness) ** 2)
->>>>>>> Stashed changes
 
 
 def z0_der_fcn(x):
@@ -80,9 +68,5 @@ param = Parameters(
     num_msg=200,
     num_csv=200,
     l2_error_period=-1,
-<<<<<<< Updated upstream
-    ave_period_list=[20, -1, -1, -1],
-=======
     ave_period_list=[10, 10, -1, -1],
->>>>>>> Stashed changes
 )
