@@ -1,0 +1,111 @@
+function plotSnow(projFolderPath, varargin)
+
+p = inputParser;
+addRequired(p, 'projFolderPath', @(x) ischar(x) || isstring(x))
+addOptional(p, 'timesteps', 0)
+addOptional(p, 'filenamePrefix', "")
+addOptional(p, 'zlimits', 0)
+addOptional(p, 'movie', false)
+addOptional(p, 'frameRate', 5)
+addOptional(p, 'KtoC', false)
+parse(p, projFolderPath, varargin{:});
+
+removeGhostCells = true;
+zlimits = p.Results.zlimits;
+set_zlimits = length(zlimits) == 2;
+filenamePrefix = p.Results.filenamePrefix;
+movieFilename = p.Results.movie;
+saveMovie = ischar(movieFilename) | isstring(movieFilename);
+KtoC = p.Results.KtoC;
+
+solnFolderPath = fullfile(projFolderPath, "solutions/");
+[centersX, centersZ] = getCenterCoordMatrices(projFolderPath);
+
+if removeGhostCells
+    centersX = centersX(2:end-1, 2:end-1);
+    centersZ = centersZ(2:end-1, 2:end-1);
+end
+
+zoomRate = 0.98;
+ncol = size(centersX, 2);
+top_j = round(ncol * zoomRate);
+centersX = centersX(:, 1:top_j);
+centersZ = centersZ(:, 1:top_j);
+
+frameNo = 0;
+
+for solutionName = p.Results.solutions
+    for t = p.Results.timesteps
+        filename = sprintf("%s%s_%1.4fs.csv", filenamePrefix, solutionName, t);
+        % fprintf("Plotting %s\n", filename)
+        filepath = fullfile(solnFolderPath, filename);
+        frameNo = frameNo + 1;
+        
+        sol = readmatrix(filepath);
+        
+        if removeGhostCells
+            sol = sol(2:end-1, 2:end-1);
+        end
+        
+        if KtoC
+            sol = sol - 273.15;
+        end
+        
+        sol = sol(:, 1:top_j);
+        if contour
+            fig = contourf(centersX, centersZ, sol);
+        elseif snow
+            fig = surf(centersX, centersZ, 1.*(sol <= 0));
+            view(2)
+        else
+            fig = surf(centersX, centersZ, sol);
+        end
+        
+        title({solutionName, sprintf("t = %1.4fs", t)})
+        xlabel("x-axis"); ylabel("z-axis"); zlabel("Solution Value");
+        colorbar
+        
+        if set_zlimits
+            zlim(zlimits)
+            caxis(zlimits)
+        end
+        
+        if view2d
+            view(2)
+        end
+        
+        if saveMovie
+            MovieMatrix(frameNo) = getframe(gcf);
+            
+            if frameNo == 1
+                MovieMatrix = repmat(MovieMatrix(1), [1, 1, length(p.Results.solutions)]);
+            end
+        end
+        
+        drawnow
+    end
+end
+
+if saveMovie
+    fprintf("Saving movie to file.\n")
+    if ~exist("results", "dir")
+        mkdir("results");
+    end
+    v = VideoWriter(fullfile("results", movieFilename));
+    v.FrameRate = p.Results.frameRate;
+    open(v)
+    writeVideo(v, MovieMatrix)
+    close(v)
+    fprintf("Movie successfully saved as: %s\n", movieFilename)
+end
+
+%%
+
+function alpha = alpha_fcn(T)
+
+T_w = 273.15;
+T_i = 263.15;
+
+alpha = (T >= T_i) .* (T <= T_w) .* (T - T_i) ./ (T_w - T_i) + (T > T_w);
+    
+end

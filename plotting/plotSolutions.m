@@ -10,6 +10,9 @@ addOptional(p, 'zlimits', 0)
 addOptional(p, 'view2d', false)
 addOptional(p, 'movie', false)
 addOptional(p, 'frameRate', 5)
+addOptional(p, 'KtoC', false)
+addOptional(p, 'contour', false)
+addOptional(p, 'snow', false)
 parse(p, projFolderPath, varargin{:});
 
 removeGhostCells = ~p.Results.showGhost;
@@ -19,6 +22,9 @@ view2d = p.Results.view2d;
 filenamePrefix = p.Results.filenamePrefix;
 movieFilename = p.Results.movie;
 saveMovie = ischar(movieFilename) | isstring(movieFilename);
+KtoC = p.Results.KtoC;
+contour = p.Results.contour;
+snow = p.Results.snow;
 
 solnFolderPath = fullfile(projFolderPath, "solutions/");
 [centersX, centersZ] = getCenterCoordMatrices(projFolderPath);
@@ -27,6 +33,12 @@ if removeGhostCells
     centersX = centersX(2:end-1, 2:end-1);
     centersZ = centersZ(2:end-1, 2:end-1);
 end
+
+zoomRate = 0.98;
+ncol = size(centersX, 2);
+top_j = round(ncol * zoomRate);
+centersX = centersX(:, 1:top_j);
+centersZ = centersZ(:, 1:top_j);
 
 frameNo = 0;
 
@@ -43,7 +55,19 @@ for solutionName = p.Results.solutions
             sol = sol(2:end-1, 2:end-1);
         end
         
-        fig = surf(centersX, centersZ, sol);
+        if KtoC
+            sol = sol - 273.15;
+        end
+        
+        sol = sol(:, 1:top_j);
+        if contour
+            fig = contourf(centersX, centersZ, sol);
+        elseif snow
+            fig = surf(centersX, centersZ, 1.*(sol < 0));
+            view(2)
+        else
+            fig = surf(centersX, centersZ, sol);
+        end
         
         title({solutionName, sprintf("t = %1.4fs", t)})
         xlabel("x-axis"); ylabel("z-axis"); zlabel("Solution Value");

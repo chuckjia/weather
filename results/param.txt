@@ -1,0 +1,18 @@
+===== ===== ===== ===== ===== ===== 
+Parameters:
+    x0 = 0.00 m
+    xf = 90000.00 m
+    z0 = [function]
+    zf = 16000.00 m
+    Nx = 100
+    Nz = 100
+    tf = 100.0000 s
+    Nt = 1000 (# of time steps)
+    
+    Time method: rk4
+    
+    # of progress messages = 200
+    # of saved CSV results = 200
+    l2 error period        = 1002
+    Averaging period       = (10, 10, 1002, 1002)
+===== ===== ===== ===== ===== ===== 

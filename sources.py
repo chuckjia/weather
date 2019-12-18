@@ -2,6 +2,11 @@ import numpy as np
 from numpy import (
     exp,
     log,
+<<<<<<< Updated upstream
+=======
+    maximum as max,
+    minimum as min,
+>>>>>>> Stashed changes
     pi,
 )
 import physics as phys
@@ -98,22 +103,33 @@ class PhysicalSources(Sources):
         return q_vsw, q_vsi
 
     c_p = phys.c_p
+<<<<<<< Updated upstream
     Delta_t = phys.Delta_t
+=======
+    Delta_t = 1e5
+>>>>>>> Stashed changes
 
     c1_con = Delta_t * L_v * L_v / (c_p * R_v)
     c2_con = Delta_t * L_s * L_s / (c_p * R_v)
 
-    def con_source(self, T, r_qv, rho_o, q_vs_pair, alpha_pair):
+    def con_source(self, T, qv, rho_o, q_vs_pair, alpha_pair):
         """CON: Cloud bulk condensation rate from water vapor."""
 
         alpha, one_minus_alpha = alpha_pair
         q_vsw, q_vsi = q_vs_pair
 
         T_squared = T ** 2
+<<<<<<< Updated upstream
         con_w = (r_qv - rho_o * q_vsw) / (
             self.Delta_t + self.c1_con / T_squared * q_vsw
         )
         con_i = (r_qv - rho_o * q_vsi) / (
+=======
+        con_w = max(qv - q_vsw, 0) * rho_o / (
+            self.Delta_t + self.c1_con / T_squared * q_vsw
+        )
+        con_i = max(qv - q_vsi, 0) * rho_o / (
+>>>>>>> Stashed changes
             self.Delta_t + self.c2_con / T_squared * q_vsi
         )
 
@@ -211,7 +227,7 @@ class PhysicalSources(Sources):
 
         con = self.con_source(
             T=T,
-            r_qv=r_qv,
+            qv=qv,
             rho_o=rho_o,
             q_vs_pair=q_vs_pair,
             alpha_pair=alpha_pair,
@@ -232,11 +248,14 @@ class PhysicalSources(Sources):
 
         V_Ts = self.V_Ts_fcn(r_qp=r_qp, one_minus_alpha=alpha_pair[1])
 
+        con_dep_sum = con + dep;
+        acc_aut_sum = acc + aut;
+
         source_tuple = (
-            theta_e / T_e * self.c_source * (con + dep),
-            -con - dep,
-            con - acc - aut,
-            acc + aut + dep,
+            theta_e / T_e * self.c_source * con_dep_sum,
+            -con_dep_sum,
+            con - acc_aut_sum,
+            acc_aut_sum + dep,
         )
 
         return source_tuple, V_Ts

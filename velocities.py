@@ -94,41 +94,54 @@ class PhysicalUW(UW):
         )
 
     def uw_fcn(self, x, z):
-        X = 10e3
-        Z = 15e3
-        A = 4.8e4
-        S = 2.5e-2
-        x_c = 30e3
-        pi = np.pi
-        rho_oo = 1.225
+        # X = 10e3
+        # Z = 15e3
+        # A = 4.8e4
+        # S = 2.5e-2
+        # x_c = 30e3
+        # pi = np.pi
+        # rho_oo = 1.225
+        #
+        # def rho_o_fcn(z):
+        #     return -1e-5 * rho_oo * z + rho_oo
+        #
+        # drho_o_dz = -1e-5 * rho_oo
+        # x_hat = max(-X, min(X, x - x_c))
+        # z_hat = min(z, Z)
+        # c_x = pi / X
+        # c_z = pi / Z
+        # rho_o = rho_o_fcn(z)
+        #
+        # # Compute u
+        # neg_dpsi_dz_large_z = S * z
+        # c_z_times_z = c_z * z
+        # neg_dpsi_dz_small_z = (-A / rho_oo) * sin(c_x * x_hat) * (
+        #     drho_o_dz * sin(c_z_times_z) + c_z * rho_o * cos(c_z_times_z)
+        # ) + neg_dpsi_dz_large_z
+        #
+        # u_m = (
+        #     neg_dpsi_dz_small_z * (z < Z) + neg_dpsi_dz_large_z * (z >= Z)
+        # ) / rho_o
+        #
+        # # Compute w
+        # neg_dpsi_dx = (-A / rho_oo * c_x) * sin(c_z * z_hat) * cos(c_x * (x - x_c))
+        # w_m = neg_dpsi_dx * (x > (x_c - X)) * (x < (x_c + X)) / rho_o
 
-        def rho_o_fcn(z):
-            return -1e-5 * rho_oo * z + rho_oo
+        # Right flowing u and w
 
-        drho_o_dz = -1e-5 * rho_oo
-        x_hat = max(-X, min(X, x - x_c))
-        z_hat = min(z, Z)
-        c_x = pi / X
-        c_z = pi / Z
-        rho_o = rho_o_fcn(z)
-
-        # Compute u
-        neg_dpsi_dz_large_z = S * z
-        c_z_times_z = c_z * z
-        neg_dpsi_dz_small_z = (-A / rho_oo) * sin(c_x * x_hat) * (
-            drho_o_dz * sin(c_z_times_z) + c_z * rho_o * cos(c_z_times_z)
-        ) + neg_dpsi_dz_large_z
-
-        u_m = (
-            neg_dpsi_dz_small_z * (z < Z) + neg_dpsi_dz_large_z * (z >= Z)
-        ) / rho_o
-
-        # Compute w
-        neg_dpsi_dx = (-A / rho_oo * c_x) * sin(c_z * z_hat) * cos(c_x * (x - x_c))
-        w_m = neg_dpsi_dx * (x > (x_c - X)) * (x < (x_c + X)) / rho_o
+        def normalize(x, y, norm=1):
+            vec_size = (x ** 2 + y ** 2) ** 0.5 / norm
+            return x / vec_size, y / vec_size
 
         # u_m = np.ones(x.shape)
         # w_m = np.zeros(x.shape)
+
+        for i in range(1, x.shape[0] - 1):
+            # c = cos(2 * pi * x[i, 0])
+            for j in range(1, x.shape[1] - 1):
+                x_vec = x[i + 1, j] - x[i, j]
+                z_vec = z[i + 1, j] - z[i, j]
+                u_m[i, j], w_m[i, j] = normalize(x=x_vec, y=z_vec, norm=0.5)
 
         return u_m, w_m
 

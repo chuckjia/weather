@@ -11,9 +11,15 @@ class Boundary():
         for sol_m in self.get_solutions():
             sol_m[0, :] = - sol_m[1, :]
 
-    def apply_left_dirichlet_condition(self, boundary_val_array):
-        for sol_m in self.get_solutions():
-            sol_m[0, :] = 2 * boundary_val_array - sol_m[1, :]
+    def apply_left_dirichlet_condition(self, boundary_val_array_tuple):
+        sol_list = self.get_solutions()
+        for sol_m, boundary_vals in zip(sol_list, boundary_val_array_tuple):
+            sol_m[0, :] = 2 * boundary_vals - sol_m[1, :]
+
+    def apply_left_dirichlet_condition_alt(self, boundary_val_array_tuple):
+        sol_list = self.get_solutions()
+        for sol_m, boundary_vals in zip(sol_list, boundary_val_array_tuple):
+            sol_m[0, :] = boundary_vals
 
     def apply_all_boundary_zero_dirichlet_condition(self):
         for sol_m in self.get_solutions():
@@ -25,6 +31,10 @@ class Boundary():
     def apply_right_neumann_condition(self):
         for sol_m in self.get_solutions():
             sol_m[-1, :] = sol_m[-2, :]
+
+    def apply_bott_neumann_condition(self):
+        for sol_m in self.get_solutions():
+            sol_m[:, 0] = sol_m[:, 1]
 
 
 class ZeroDirichletBoundary(Boundary):
@@ -42,19 +52,20 @@ class PhysicalBoundary(Boundary):
         self.set_boundary_values()
 
     def set_boundary_values(self):
-        self.twice_left_boundary_val_array_tuple = tuple(
-            sol_m[0, :] + sol_m[1, :] for sol_m in self.get_solutions()
+        self.left_boundary_val_array_tuple = tuple(
+            (sol_m[0, :] + sol_m[1, :]) / 2 for sol_m in self.get_solutions()
         )
 
     def apply_boundary_conditions(self):
         # Left Dirichlet boundary condition
-        for sol_m, twice_boundary_val in zip(
-            self.get_solutions(), self.twice_left_boundary_val_array_tuple,
-        ):
-            sol_m[0, :] = twice_boundary_val - sol_m[1, :]
+        self.apply_left_dirichlet_condition_alt(
+            boundary_val_array_tuple=self.left_boundary_val_array_tuple,
+        )
 
         # Right Neumann boundary condition
         self.apply_right_neumann_condition()
+
+        self.apply_bott_neumann_condition()
 
 
 if __name__ == "__main__":
