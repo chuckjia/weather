@@ -2,11 +2,8 @@ import numpy as np
 from numpy import (
     exp,
     log,
-<<<<<<< Updated upstream
-=======
     maximum as max,
     minimum as min,
->>>>>>> Stashed changes
     pi,
 )
 import physics as phys
@@ -103,11 +100,7 @@ class PhysicalSources(Sources):
         return q_vsw, q_vsi
 
     c_p = phys.c_p
-<<<<<<< Updated upstream
     Delta_t = phys.Delta_t
-=======
-    Delta_t = 1e5
->>>>>>> Stashed changes
 
     c1_con = Delta_t * L_v * L_v / (c_p * R_v)
     c2_con = Delta_t * L_s * L_s / (c_p * R_v)
@@ -119,17 +112,10 @@ class PhysicalSources(Sources):
         q_vsw, q_vsi = q_vs_pair
 
         T_squared = T ** 2
-<<<<<<< Updated upstream
-        con_w = (r_qv - rho_o * q_vsw) / (
-            self.Delta_t + self.c1_con / T_squared * q_vsw
-        )
-        con_i = (r_qv - rho_o * q_vsi) / (
-=======
         con_w = max(qv - q_vsw, 0) * rho_o / (
             self.Delta_t + self.c1_con / T_squared * q_vsw
         )
         con_i = max(qv - q_vsi, 0) * rho_o / (
->>>>>>> Stashed changes
             self.Delta_t + self.c2_con / T_squared * q_vsi
         )
 

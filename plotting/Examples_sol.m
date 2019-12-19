@@ -9,7 +9,7 @@ solnameArray = ["theta", "qv", "qc", "qp"];
 zlimitsArray = {[-50, 100], [0, 12], [0, 0.035], [0, 0.05]};
 zlimitsMap = containers.Map(solnameArray, zlimitsArray);
 
-solname = "qv";
+solname = "theta";
 zlimits = zlimitsMap(solname);
 Dt = 0.5;
 Nt = 200;
@@ -27,8 +27,8 @@ plotSolutions( ...
     'view2d', true, ...
     'movie', false, ...
     'KtoC', solname == "theta", ...
-    'contour', false, ...
-    'snow', true);
+    'contour', true, ...
+    'snow', false);
 
 %% Plot snow
 
