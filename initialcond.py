@@ -42,7 +42,7 @@ class PhysicalInitialCondition(InitialCondition):
         theta = self.init_theta_fcn(x, z)
         p_e = phys.p_e_fcn(z)
         T = phys.theta_to_T(theta, p_e)
-        saturation = 0.9
+        saturation = 0.5
 
         return saturation * 3.801664 * exp(17.67 * (T - 273.15) / (T - 29.65))
 

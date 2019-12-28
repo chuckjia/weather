@@ -7,6 +7,7 @@ addOptional(p, 'zlimits', 0)
 addOptional(p, 'movie', false)
 addOptional(p, 'contour', false)
 addOptional(p, 'frameRate', 5)
+addOptional(p, 'zoom', 1)
 parse(p, projFolderPath, varargin{:});
 
 removeGhostCells = true;
@@ -15,6 +16,7 @@ set_zlimits = length(zlimits) == 2;
 movieFilename = p.Results.movie;
 saveMovie = ischar(movieFilename) | isstring(movieFilename);
 contour = p.Results.contour;
+zoomRate = p.Results.zoom;
 
 solnFolderPath = fullfile(projFolderPath, "solutions/");
 [centersX, centersZ] = getCenterCoordMatrices(projFolderPath);
@@ -24,7 +26,6 @@ if removeGhostCells
     centersZ = centersZ(2:end-1, 2:end-1);
 end
 
-zoomRate = 0.98;
 ncol = size(centersX, 2);
 top_j = round(ncol * zoomRate);
 centersX = centersX(:, 1:top_j);
@@ -65,10 +66,11 @@ for t = p.Results.timesteps
     end
     
     if saveMovie
-        MovieMatrix(frameNo) = getframe(gcf);
-        
-        if frameNo == 1
-            MovieMatrix = repmat(MovieMatrix(1), [1, 1, length(p.Results.solutions)]);
+        if frameNo >= 2
+            MovieMatrix(frameNo - 1) = getframe(gcf);
+        end
+        if frameNo == 2
+            MovieMatrix = repmat(MovieMatrix(1), [1, 1, length(p.Results.timesteps) - 1]);
         end
     end
     

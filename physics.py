@@ -18,7 +18,7 @@ R_v = 461.5  # Gas constant for water vapor
 rho_w = 1e3  # Water density
 
 e_oo = 611.0
-Delta_t = 50.0
+Delta_t = 5e5
 epsilon = 0.622  # epsilon = R_d / R_v
 
 # Following are physical constants computed from other constants

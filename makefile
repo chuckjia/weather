@@ -4,12 +4,10 @@ all:
 fresh: clean
 	python weather.py
 
-clean:
+cleancache:
+	rm -rf __pycache__
+
+cleanall:
 	rm -rf results
 	rm -rf solutions
 	rm -rf __pycache__
-
-clear:
-	clear
-	clear
-	clear

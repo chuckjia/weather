@@ -6,13 +6,13 @@ Parameters:
     zf = 16000.00 m
     Nx = 100
     Nz = 100
-    tf = 100.0000 s
-    Nt = 1000 (# of time steps)
+    tf = 10000.0000 s
+    Nt = 20000 (# of time steps)
     
     Time method: rk4
     
     # of progress messages = 200
     # of saved CSV results = 200
-    l2 error period        = 1002
-    Averaging period       = (10, 10, 1002, 1002)
+    l2 error period        = 20002
+    Averaging period       = (5, 20002, 20002, 20002)
 ===== ===== ===== ===== ===== ===== 

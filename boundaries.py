@@ -56,6 +56,10 @@ class PhysicalBoundary(Boundary):
             (sol_m[0, :] + sol_m[1, :]) / 2 for sol_m in self.get_solutions()
         )
 
+    def smooth_bott_boundary(self):
+        theta_m = self.get_solutions()[0]
+        theta_m[:, 1] = theta_m[:, 2]
+
     def apply_boundary_conditions(self):
         # Left Dirichlet boundary condition
         self.apply_left_dirichlet_condition_alt(
@@ -66,6 +70,7 @@ class PhysicalBoundary(Boundary):
         self.apply_right_neumann_condition()
 
         self.apply_bott_neumann_condition()
+        self.smooth_bott_boundary()
 
 
 if __name__ == "__main__":

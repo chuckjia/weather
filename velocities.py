@@ -133,8 +133,8 @@ class PhysicalUW(UW):
             vec_size = (x ** 2 + y ** 2) ** 0.5 / norm
             return x / vec_size, y / vec_size
 
-        # u_m = np.ones(x.shape)
-        # w_m = np.zeros(x.shape)
+        u_m = np.ones(x.shape)
+        w_m = np.zeros(x.shape)
 
         for i in range(1, x.shape[0] - 1):
             # c = cos(2 * pi * x[i, 0])

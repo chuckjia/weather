@@ -130,6 +130,7 @@ class TimeStepping():
             raise Exception("Did not assign correct initial conditions!")
 
         self.param.save_to_txt()
+        self.param.save_to_csv()
         self.mesh.save_coord_matrices_to_csv()
         self.mesh.apply_initial_conditions(init_fcn_list=init_fcn_list)
 

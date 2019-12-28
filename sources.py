@@ -112,10 +112,10 @@ class PhysicalSources(Sources):
         q_vsw, q_vsi = q_vs_pair
 
         T_squared = T ** 2
-        con_w = max(qv - q_vsw, 0) * rho_o / (
+        con_w = min(max(qv - q_vsw, 0), 1) * rho_o / (
             self.Delta_t + self.c1_con / T_squared * q_vsw
         )
-        con_i = max(qv - q_vsi, 0) * rho_o / (
+        con_i = min(max(qv - q_vsi, 0), 1) * rho_o / (
             self.Delta_t + self.c2_con / T_squared * q_vsi
         )
 
@@ -234,12 +234,12 @@ class PhysicalSources(Sources):
 
         V_Ts = self.V_Ts_fcn(r_qp=r_qp, one_minus_alpha=alpha_pair[1])
 
-        con_dep_sum = con + dep;
+        # con_dep_sum = con + dep;
         acc_aut_sum = acc + aut;
 
         source_tuple = (
-            theta_e / T_e * self.c_source * con_dep_sum,
-            -con_dep_sum,
+            theta_e / T_e * self.c_source * (con + dep),
+            -(con + dep),
             con - acc_aut_sum,
             acc_aut_sum + dep,
         )

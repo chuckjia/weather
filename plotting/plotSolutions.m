@@ -13,6 +13,7 @@ addOptional(p, 'frameRate', 5)
 addOptional(p, 'KtoC', false)
 addOptional(p, 'contour', false)
 addOptional(p, 'snow', false)
+addOptional(p, 'zoom', 1)
 parse(p, projFolderPath, varargin{:});
 
 removeGhostCells = ~p.Results.showGhost;
@@ -25,6 +26,7 @@ saveMovie = ischar(movieFilename) | isstring(movieFilename);
 KtoC = p.Results.KtoC;
 contour = p.Results.contour;
 snow = p.Results.snow;
+zoomRate = p.Results.zoom;
 
 solnFolderPath = fullfile(projFolderPath, "solutions/");
 [centersX, centersZ] = getCenterCoordMatrices(projFolderPath);
@@ -34,11 +36,11 @@ if removeGhostCells
     centersZ = centersZ(2:end-1, 2:end-1);
 end
 
-zoomRate = 0.98;
 ncol = size(centersX, 2);
+bott_j = 2;
 top_j = round(ncol * zoomRate);
-centersX = centersX(:, 1:top_j);
-centersZ = centersZ(:, 1:top_j);
+centersX = centersX(:, bott_j:top_j);
+centersZ = centersZ(:, bott_j:top_j);
 
 frameNo = 0;
 
@@ -59,7 +61,7 @@ for solutionName = p.Results.solutions
             sol = sol - 273.15;
         end
         
-        sol = sol(:, 1:top_j);
+        sol = sol(:, bott_j:top_j);
         if contour
             fig = contourf(centersX, centersZ, sol);
         elseif snow

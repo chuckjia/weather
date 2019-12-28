@@ -104,6 +104,23 @@ class Parameters():
 
         return sep + "\nParameters:\n" + info + "\n" + sep
 
+    def save_to_csv(self):
+        data = (
+            (self.x0, "x0,%1.20e"),
+            (self.xf, "xf,%1.20e"),
+            (self.zf, "zf,%1.20e"),
+            (self.Nx, "Nx,%d"),
+            (self.Nz, "Nz,%d"),
+            (self.tf, "tf,%1.20e"),
+            (self.Nt, "Nt,%d"),
+            (self.num_csv, "num_csv,%d"),
+        )
+
+        with open("results/param.csv", "w") as f:
+            f.write(
+                "\n".join([s % d for d, s in data])
+            )
+
     def save_to_txt(self):
         with open("results/param.txt", "w") as f:
             f.write(str(self))
